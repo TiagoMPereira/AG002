@@ -1,32 +1,41 @@
+# Bibliotecas para manipulação de dados
 import numpy as np
 import pandas as pd
 
+# Criação e avaliação de modelos
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.neighbors import KNeighborsClassifier
-
 from sklearn.model_selection import train_test_split 
 from sklearn.metrics import accuracy_score
 
+# Lendo dataset e alterando valores
 dataset = pd.read_csv("./data/tic_tac_toe.csv")
-dataset.replace(["x","o", "b", "positivo", "negativo"], [1,-1, 0, 1, -1], inplace = True)
+dataset.replace(["x", "o", "b", "positivo", "negativo"], [1, -1, 0, 1, -1], inplace = True)
 
-tree = DecisionTreeClassifier()
-knn = KNeighborsClassifier()
-
+# Separando variáveis X e Y
 x = dataset.iloc[:,0:9]
 y = dataset.iloc[:,9]
 
+# Dividindo conjunto de treino e teste
 x_train, x_test, y_train, y_test = train_test_split(x, y, test_size = 0.2)
 
+# Criando modelos de Árvore de decisão e KNN
+tree = DecisionTreeClassifier()
+knn = KNeighborsClassifier()
+
+# Treinando modelos
 tree.fit(x_train, y_train)
 knn.fit(x_train, y_train)
 
+# Fazendo predições com os modelos
 tree_prediction = tree.predict(x_test)
 knn_prediction = knn.predict(x_test)
 
+# Avaliando acurácia dos modelos
 tree_score = accuracy_score(y_test, tree_prediction)
 knn_score = accuracy_score(y_test, knn_prediction)
 
+# Pedindo entrada do usuário
 input_vector = []
 for i in range (9):
     valor = input()
@@ -35,6 +44,7 @@ for i in range (9):
 
 input_vector = np.array(input_vector).reshape(1, -1)
 
+# Avaliando a qual modelo submeter os dados do usuário e fazendo a predição dos mesmos
 if tree_score > knn_score:
     resultado = tree.predict(input_vector)
     model = "Árvore de decisão"
@@ -46,6 +56,7 @@ else:
 
 resultado = "x venceu" if resultado[0] == 1 else "x não venceu"
 
+# Apresentando resultados
 print(f"Modelo selecionado: {model}")
-print(f"Acurácia do modelo {accuracy}")
-print(f"Resultado {resultado}")
+print(f"Acurácia do modelo: {accuracy}")
+print(f"Resultado> {resultado}")
